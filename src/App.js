@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
+  // ----------------------- STATE INITIALIZATION ------------------------
   const [blogs, setBlogs] = useState([])
+  const [message, setMessage] = useState({
+    content: '',
+    color: '',
+  })
   const [newBlog, setNewBlog] = useState({
     title: '',
     author: '',
@@ -15,7 +21,7 @@ const App = () => {
     password: ''
   })
   const [user, setUser] = useState(null)
-
+  // ----------------------- EFFECT HOOKS ------------------------
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -31,6 +37,18 @@ const App = () => {
     }
   }, [])
 
+  // ----------------------- utils ------------------------------
+
+  const resetMessage = () => {
+    setTimeout(() => {
+      setMessage({
+        content: '',
+        color: '',
+      })
+    }, 5000)
+  }
+
+  // ----------------------- EVENT HANDLERS ------------------------
   const handleCredentialsChange = (event) => {
     setCredentials(prevState => ({
       ...prevState,
@@ -45,8 +63,6 @@ const App = () => {
     }))
   }
 
-  console.log(blogs)
-
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -59,7 +75,11 @@ const App = () => {
         password: ''
       })
     } catch(error) {
-      console.log(error)
+      setMessage({
+        content: 'Wrong username or password',
+        color: 'red'
+      })
+      resetMessage()
     }
   }
 
@@ -73,6 +93,11 @@ const App = () => {
     try {
       const savedBlog = await blogService.create(newBlog)
       setBlogs(prev => prev.concat(savedBlog))
+      setMessage({
+        content: `a new blog ${savedBlog.title} by ${savedBlog.author} added`,
+        color: 'green'
+      })
+      resetMessage()
       setNewBlog({
         title: '',
         author: '',
@@ -83,39 +108,37 @@ const App = () => {
     }
   }
 
+  // ----------------------- FUNCTIONS FOR CREATING JSX ------------------------
+
   const loginForm = () => (
-    <>
-      <h2>login to application</h2>
-      <form onSubmit={handleLogin}>
-        <label>
-          username
-          <input
-            type='text'
-            name='username'
-            value={credentials.username}
-            onChange={handleCredentialsChange}
-          ></input>
-        </label>
-        <br />
-        <label>
-          password
-          <input
-            type='password'
-            name='password'
-            value={credentials.password}
-            onChange={handleCredentialsChange}
-          ></input>
-        </label>
-        <br />
-        <button type='submit'>login</button>
-      </form>
-    </>
+    <form onSubmit={handleLogin}>
+      <label>
+        username
+        <input
+          type='text'
+          name='username'
+          value={credentials.username}
+          onChange={handleCredentialsChange}
+        ></input>
+      </label>
+      <br />
+      <label>
+        password
+        <input
+          type='password'
+          name='password'
+          value={credentials.password}
+          onChange={handleCredentialsChange}
+        ></input>
+      </label>
+      <br />
+      <button type='submit'>login</button>
+    </form>
   )
 
   const main = () => {
     return (
       <>
-        <h2>blogs</h2>
         <div>
           {`${user.name} logged in`}
           <button onClick={handleLogout}>log out</button>
@@ -163,7 +186,12 @@ const App = () => {
 
   return (
     <div>
-      {user === null ? loginForm() : main()}
+      <h2>{user === null ? 'log in to application' : 'blogs'}</h2>
+      <Notification message={message} />
+      {user === null 
+        ? loginForm()
+        : main()
+      }
     </div>
   )
 }
