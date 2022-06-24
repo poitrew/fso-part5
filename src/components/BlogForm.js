@@ -33,6 +33,7 @@ const BlogForm = ({ create }) => {
                     <input
                         type='text'
                         name='title'
+                        placeholder={'blog\'s title'}
                         value={newBlog.title}
                         onChange={handleChange}>
                     </input>
