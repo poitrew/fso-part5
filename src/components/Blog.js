@@ -31,20 +31,20 @@ const Blog = ({ blog, like, del }) => {
     const toggleBlogDetailVisibility = () => setBlogDetailVisibility(!blogDetailVisibility)
 
     return (
-        <>
+        <div>
             <div style={blogStyle}>
                 {blog.title} <button onClick={toggleBlogDetailVisibility}>{blogDetailVisibility ? 'hide' : 'view'}</button>
             </div>
             {blogDetailVisibility &&
-        <div style={blogStyle}>
-            {blog.author}<br />
-            {blog.url}<br />
-          likes {blog.likes} <button onClick={handleLike}>like</button><br />
-            {blog.user.name}<br />
-            <button style={{ background: 'lightblue', cursor: 'pointer' }}onClick={handleRemove}>remove</button>
-        </div>
+                <div style={blogStyle} className='blog-detail'>
+                    {blog.author}<br />
+                    {blog.url}<br />
+                    likes {blog.likes} <button onClick={handleLike}>like</button><br />
+                    {blog.user.name}<br />
+                    <button style={{ background: 'lightblue', cursor: 'pointer' }}onClick={handleRemove}>remove</button>
+                </div>
             }
-        </>
+        </div>
     )
 }
 
