@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
+
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -107,9 +109,11 @@ const App = () => {
             <Togglable buttonLabel='new blog'>
                 <BlogForm create={addBlog} />
             </Togglable>
-            {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-                <Blog key={blog.id} blog={blog} like={updateLikes} del={deleteBlog}/>
-            )}
+            <div className='blogs'>
+                {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+                    <Blog key={blog.id} blog={blog} like={updateLikes} del={deleteBlog}/>
+                )}
+            </div>
         </>
             }
 

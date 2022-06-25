@@ -32,6 +32,7 @@ const LoginForm = ({ login, logout, user }) => {
                     <label>
                             username
                         <input
+                            id='username'
                             type='text'
                             name='username'
                             value={credentials.username}
@@ -42,6 +43,7 @@ const LoginForm = ({ login, logout, user }) => {
                     <label>
                             password
                         <input
+                            id='password'
                             type='password'
                             name='password'
                             value={credentials.password}
